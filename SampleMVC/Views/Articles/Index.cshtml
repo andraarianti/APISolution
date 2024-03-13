@@ -1,4 +1,6 @@
-﻿@model SampleMVC.ViewModels.ArticlesByCategoryViewModel
+﻿@using MyWebFormApp.BO
+@using Newtonsoft.Json
+@model SampleMVC.ViewModels.ArticlesByCategoryViewModel
 
 <div class="row">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -24,7 +26,17 @@
                     </div>
                 </form>
                 <br /><br />
-                <a asp-action="Create" class="btn btn-outline-primary btn-sm">Create New</a>
+                @if (ViewContext.HttpContext.Session.GetString("user") != null)
+                {
+                    var user = JsonConvert.DeserializeObject<User>(ViewContext.HttpContext.Session.GetString("user"));
+                    foreach (var role in user.Roles)
+                    {
+                        if (role.RoleID == 2)
+                        {
+                            <a asp-action="Create" class="btn btn-outline-primary btn-sm">Create New</a>
+                        }
+                    }
+                }
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -46,8 +58,18 @@
                                 <td>@article.Title</td>
                                 <td>@article.IsApproved</td>
                                 <td><img src="~/pics/@article.Pic" width="60" /></td>
-                                <td><a asp-action="Edit" asp-route-id="@article.CategoryID" class="btn btn-warning btn-sm">edit</a></td>
-                                <td><a asp-action="Delete" asp-route-id="@article.CategoryID" class="btn btn-danger btn-sm">delete</a></td>
+                                @if (ViewContext.HttpContext.Session.GetString("user") != null)
+                                {
+                                    var user = JsonConvert.DeserializeObject<User>(ViewContext.HttpContext.Session.GetString("user"));
+                                    foreach (var role in user.Roles)
+									{
+										if (role.RoleID == 2)
+										{
+                                            <td><a asp-action="Edit" asp-route-id="@article.CategoryID" class="btn btn-warning btn-sm">edit</a></td>
+                                            <td><a asp-action="Delete" asp-route-id="@article.CategoryID" class="btn btn-danger btn-sm">delete</a></td>
+										}
+									}
+                                }
                             </tr>
                         }
                     </tbody>

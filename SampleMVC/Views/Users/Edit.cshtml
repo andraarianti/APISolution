@@ -1,0 +1,76 @@
+﻿@model MyWebFormApp.BLL.DTOs.UserDTO
+
+@{
+	ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>UserDTO</h4>
+<hr />
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="Edit">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label asp-for="Username" class="control-label"></label>
+				<input asp-for="Username" class="form-control" readonly />
+				<input asp-for="Username" class="form-control" hidden />
+				<span asp-validation-for="Username" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<input asp-for="FirstName" class="form-control" hidden />
+			</div>
+			<div class="form-group">
+				<input asp-for="LastName" class="form-control" hidden />
+			</div>
+			<div class="form-group">
+				<input asp-for="Address" class="form-control" hidden />
+			</div>
+			<div class="form-group">
+				<input asp-for="Email" class="form-control" hidden />
+			</div>
+			<div class="form-group">
+				<input asp-for="Telp" class="form-control" hidden />
+			</div>
+			<div class="form-group">
+				<label asp-for="Roles" class="control-label">Roles</label>
+				<ul>
+					@foreach (var role in Model.Roles)
+					{
+						<li>@role.RoleName</li>
+					}
+				</ul>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="Roles" class="control-label"></label>
+				<select name="RoleID" asp-for="Roles" class="form-control">
+					@foreach (var item in ViewBag.Roles)
+					{
+						// Check if the role is not already assigned to the user
+						if (!Model.Roles.Any(r => r.RoleID == item.RoleID))
+						{
+							<option value="@item.RoleID">@item.RoleName</option>
+						}
+					}
+				</select>
+				<span asp-validation-for="Roles" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<input type="submit" value="Save" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
+</div>
+
+<div>
+	<a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

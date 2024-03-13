@@ -45,9 +45,87 @@ namespace MyWebFormApp.BLL
             return usersDTO;
         }
 
+        public IEnumerable<UserDTO> GetAllWithRoles()
+        {
+            var users = userDAL.GetAllWithRoles();
+            var usersDTO = new List<UserDTO>();
+            foreach (var user in users)
+            {
+                var userDto = new UserDTO
+                {
+                    Username = user.Username,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Address = user.Address,
+                    Email = user.Email,
+                    Telp = user.Telp
+                };
+                var lstRolesDto = new List<RoleDTO>();
+                var roles = user.Roles;
+                foreach (var role in roles)
+                {
+                    lstRolesDto.Add(new RoleDTO
+                    {
+                        RoleID = role.RoleID,
+                        RoleName = role.RoleName
+                    });
+                }
+
+                userDto.Roles = lstRolesDto;
+                usersDTO.Add(userDto);
+            }
+            return usersDTO;
+        }
+
         public UserDTO GetByUsername(string username)
         {
-            throw new NotImplementedException();
+            var user = userDAL.GetByUsername(username);
+
+            var userDto = new UserDTO
+            {
+
+                Username = user.Username,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Address = user.Address,
+                Email = user.Email,
+                Telp = user.Telp
+            };
+
+            return userDto;
+        }
+
+        public UserDTO GetUserWithRoles(string username)
+        {
+            var user = userDAL.GetUserWithRoles(username);
+
+            if (user == null)
+            {
+                throw new ArgumentException("User not found");
+            }
+            var userDto = new UserDTO
+            {
+                Username = user.Username,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Address = user.Address,
+                Email = user.Email,
+                Telp = user.Telp
+            };
+            var lstRolesDto = new List<RoleDTO>();
+            var roles = user.Roles;
+            foreach (var role in roles)
+            {
+                lstRolesDto.Add(new RoleDTO
+                {
+                    RoleID = role.RoleID,
+                    RoleName = role.RoleName
+                });
+            }
+
+            userDto.Roles = lstRolesDto;
+
+            return userDto;
         }
 
         public void Insert(UserCreateDTO entity)
